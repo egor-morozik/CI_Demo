@@ -53,7 +53,8 @@ jobs:
         run: |
           echo "Запускаем тесты..."
           set -o pipefail
-          python -m pytest --cov=src --cov-report=term --cov-report=html --cov-report=xml tests/ -v || echo "Тесты завершились с ошибкой"
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python -m pytest --cov=app --cov-report=term --cov-report=html --cov-report=xml tests/ -v
 
       - name: Check coverage files
         run: |

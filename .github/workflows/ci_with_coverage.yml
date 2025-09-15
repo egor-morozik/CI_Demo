@@ -51,10 +51,11 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          # Создаем директорию для отчетов
-          mkdir -p coverage-reports
-          # Запускаем тесты с coverage
-          pytest --cov=src --cov-report=term --cov-report=html:coverage-reports/html --cov-report=xml:coverage-reports/coverage.xml tests/ -v
+          # Запускаем тесты с coverage и разными отчетами
+          python -m pytest --cov=src --cov-report=term --cov-report=html --cov-report=xml tests/ -v
+          # Проверяем что файлы создались
+          echo "Созданные файлы:"
+          ls -la | grep -E "(htmlcov|coverage.xml)"
 
       - name: Run lint
         run: flake8 . --max-line-length=120 --extend-ignore=E203,E501
@@ -63,5 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports-${{ matrix.python-version }}-${{ matrix.os }}
-          path: coverage-reports/
-          if-no-files-found: warn
+          path: |
+            htmlcov/
+            coverage.xml
+          if-no-files-found: ignore

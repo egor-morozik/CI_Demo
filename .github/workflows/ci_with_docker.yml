@@ -101,8 +101,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} .
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} ghcr.io/${{ github.repository }}/myapp:${{ env.VERSION }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} .
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} ghcr.io/${{ github.repository | lower }}/myapp:${{ env.VERSION }}
 
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin

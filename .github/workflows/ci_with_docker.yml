@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CIDOCKER
 
 on: 
   push:
@@ -101,8 +101,14 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} .
+          docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} .
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }} ghcr.io/${{ github.repository }}/myapp:${{ env.VERSION }}
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker image to DockerHub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ env.VERSION }}
